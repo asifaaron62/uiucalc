@@ -1,615 +1,740 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta property="og:title" content="UIU Calc">
-    <meta property="og:description" content="Calculate your CGPA, plan targets, and estimate tuition fees with waivers easily.">
-    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/c/c9/United_International_University_Monogram.png">
-    <meta property="og:url" content="https://uiu-calc.vercel.app">
-    <meta name="theme-color" content="#FF8A00">
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta property="og:title" content="UIU Calc">
+<meta property="og:description" content="Calculate your CGPA, plan targets, and estimate tuition fees with waivers easily.">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/c/c9/United_International_University_Monogram.png">
+<meta property="og:url" content="https://uiu-calc.vercel.app">
+<meta name="theme-color" content="#FF8A00">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+<title>UIU CGPA & Tuition Calc</title>
 
-    <title>UIU CGPA & Tuition Calc</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary: #FF8A00;
-            --primary-dark: #e67e00;
-            --secondary: #1E293B;
-            --accent: #3B82F6;
-            --success: #10B981;
-            --danger: #EF4444;
-            --bg-dark: #0F172A;
-            --text-light: #F1F5F9;
-            --text-gray: #94A3B8;
-        }
+<!-- Load Font Awesome normally for instant icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(255, 138, 0, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
-            color: var(--text-light);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            overflow-x: hidden;
-            padding-bottom: 100px; /* Space for floating button */
-        }
+<style>
+:root {
+--primary: #FF8A00;
+--primary-dark: #e67e00;
+--secondary: #1E293B;
+--accent: #3B82F6;
+--success: #10B981;
+--danger: #EF4444;
+--bg-dark: #0F172A;
+--text-light: #F1F5F9;
+--text-gray: #94A3B8;
+}
 
-        .container { max-width: 1000px; margin: 0 auto; width: 100%; flex: 1; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .header { text-align: center; margin-bottom: 40px; position: relative; padding-top: 20px; }
-        .logo-icon { font-size: 3rem; color: var(--primary); margin-bottom: 10px; display: inline-block; filter: drop-shadow(0 0 15px rgba(255, 138, 0, 0.4)); }
-        h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #fff, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        .subtitle { color: var(--text-gray); font-size: 0.95rem; letter-spacing: 0.5px; }
+body {
+font-family: 'Inter', sans-serif;
+background-color: var(--bg-dark);
+background-image:
+radial-gradient(at 0% 0%, rgba(255, 138, 0, 0.15) 0px, transparent 50%),
+radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%);
+color: var(--text-light);
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+padding: 20px;
+overflow-x: hidden;
+padding-bottom: 100px;
+}
 
-        .top-menu-container { position: absolute; top: 0; right: 0; z-index: 100; }
-        .left-menu-container { position: absolute; top: 0; left: 0; z-index: 100; }
+.container { max-width: 1000px; margin: 0 auto; width: 100%; flex: 1; }
 
-        .menu-btn {
-            background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1);
-            color: white; width: 40px; height: 40px; border-radius: 50%;
-            cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
-        }
-        .menu-btn:hover { background: var(--accent); border-color: var(--accent); }
-        
-        .dropdown-menu {
-            position: absolute; right: 0; top: 50px;
-            background: #1E293B; border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 18px; width: 250px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            opacity: 0; visibility: hidden;
-            transform: translateY(-10px); transition: all 0.2s ease;
-            overflow: hidden;
-            z-index: 200;
-        }
-        .dropdown-menu.left-side { right: auto; left: 0; }
-        .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
-        
-        .menu-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 14px 16px; color: var(--text-light);
-            text-decoration: none; cursor: pointer;
-            transition: background 0.2s; font-size: 0.9rem;
-        }
-        .menu-item:hover { background: rgba(255,255,255,0.05); }
-        .menu-item.danger:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-        .menu-item i { width: 25px; text-align: center; }
+.header { text-align: center; margin-bottom: 40px; position: relative; padding-top: 20px; }
+.logo-icon { font-size: 3rem; color: var(--primary); margin-bottom: 10px; display: inline-block; filter: drop-shadow(0 0 15px rgba(255, 138, 0, 0.4)); }
+h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #fff, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+.subtitle { color: var(--text-gray); font-size: 0.95rem; letter-spacing: 0.5px; }
 
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px; padding: 30px; margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
+.top-menu-container { position: absolute; top: 0; right: 0; z-index: 100; }
+.left-menu-container { position: absolute; top: 0; left: 0; z-index: 100; }
 
-        .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-group input, .input-group select { width: 100%; background: rgba(15, 23, 42, 0.6); border: 2px solid #334155; color: white; padding: 14px 16px; border-radius: 18px; font-size: 1rem; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
-        .input-group input:focus, .input-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1); outline: none; }
-        .input-group select option { background: #1E293B; }
+.menu-btn {
+background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1);
+color: white; width: 40px; height: 40px; border-radius: 50%;
+cursor: pointer; transition: all 0.2s;
+display: flex; align-items: center; justify-content: center;
+font-size: 1.2rem;
+}
+.menu-btn:hover { background: var(--accent); border-color: var(--accent); }
 
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .section-title { font-size: 1.25rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
-        .text-orange { color: var(--primary); }
-        .text-blue { color: var(--accent); }
+.dropdown-menu {
+position: absolute; right: 0; top: 50px;
+background: #1E293B; border: 1px solid rgba(255,255,255,0.1);
+border-radius: 18px; width: 250px;
+box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+opacity: 0; visibility: hidden;
+transform: translateY(-10px); transition: all 0.2s ease;
+overflow: hidden;
+z-index: 200;
+}
+.dropdown-menu.left-side { right: auto; left: 0; }
+.dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
 
-        .course-row { display: grid; grid-template-columns: 40px 2fr 1.2fr 2fr auto; gap: 12px; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 18px; margin-bottom: 12px; animation: slideIn 0.3s ease-out forwards; border: 1px solid transparent; }
-        .retake-row { grid-template-columns: 40px 2fr 1.2fr 1.5fr 30px 1.5fr auto; }
-        .course-row:hover { border-color: rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); }
-        .course-row input, .course-row select { background: transparent; border: 1px solid #475569; color: white; padding: 8px 12px; border-radius: 14px; width: 100%; height: 40px; }
-        .course-row input:focus, .course-row select:focus { border-color: var(--accent); outline: none; background: rgba(15, 23, 42, 0.95); }
-        .course-row select option { background: #1E293B; color: white; font-family: monospace; } 
+.menu-item {
+display: flex; align-items: center; gap: 10px;
+padding: 14px 16px; color: var(--text-light);
+text-decoration: none; cursor: pointer;
+transition: background 0.2s; font-size: 0.9rem;
+}
+.menu-item:hover { background: rgba(255,255,255,0.05); }
+.menu-item.danger:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+.menu-item i { width: 25px; text-align: center; }
 
-        .credit-wrapper { display: flex; gap: 5px; align-items: center; }
-        .btn-toggle-input { 
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); 
-            color: var(--text-gray); width: 40px; height: 40px; border-radius: 8px; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .btn-toggle-input:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.glass-card {
+background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 32px; padding: 30px; margin-bottom: 25px;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
 
-        .row-num { font-weight: 700; color: var(--text-gray); text-align: center; }
-        .btn { border: none; padding: 10px 16px; border-radius: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; }
-        .btn-add { background: rgba(59, 130, 246, 0.1); color: var(--accent); width: 100%; justify-content: center; padding: 14px; border: 1px dashed var(--accent); }
-        .btn-add:hover { background: var(--accent); color: white; border-style: solid; }
-        .btn-add-retake { background: rgba(255, 138, 0, 0.1); color: var(--primary); width: 100%; justify-content: center; padding: 14px; border: 1px dashed var(--primary); }
-        .btn-add-retake:hover { background: var(--primary); color: white; border-style: solid; }
-        .btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 8px; border-radius: 8px; }
-        .btn-delete:hover { background: var(--danger); color: white; }
-        .btn-calc { width: 100%; background: linear-gradient(135deg, var(--accent) 0%, #2563EB 100%); color: white; font-size: 1.1rem; padding: 18px; margin-top: 10px; border-radius: 24px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
-        .btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5); }
-        
-        .result-container { margin-top: 30px; display: none; animation: fadeInUp 0.5s ease-out; }
-        .result-container.active { display: block; }
-        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
-        .stat-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; border-radius: 22px; text-align: center; position: relative; overflow: hidden; }
-        .stat-card.primary { background: linear-gradient(135deg, var(--primary) 0%, #FF6B00 100%); border: none; grid-column: span 3; }
-        .stat-card.secondary { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); grid-column: span 3; }
-        .stat-card.tertiary { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); grid-column: span 2; }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; opacity: 0.9; }
-        .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; color: white; }
-        .stat-sub { font-size: 0.75rem; opacity: 0.8; margin-top: 5px; font-weight: 300; }
-        .chart-wrapper { margin-top: 25px; height: 300px; width: 100%; position: relative; }
-        
-        .download-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-pdf { flex: 1; background: #10B981; color: white; padding: 16px; justify-content: center; }
-        .btn-img { flex: 1; background: #6366F1; color: white; padding: 16px; justify-content: center; }
+.input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+.input-group input, .input-group select { width: 100%; background: rgba(15, 23, 42, 0.6); border: 2px solid #334155; color: white; padding: 14px 16px; border-radius: 18px; font-size: 1rem; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+.input-group input:focus, .input-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(255, 138, 0, 0.1); outline: none; }
+.input-group select option { background: #1E293B; }
 
-        .feedback-card { display: none; padding: 20px; margin-bottom: 25px; border-radius: 16px; text-align: center; border: 1px solid rgba(255,255,255,0.1); animation: bounceIn 0.8s; }
-        .feedback-card.success { background: rgba(255, 138, 0, 0.15); border-color: var(--primary); color: var(--primary); }
-        .feedback-card.warning { background: rgba(59, 130, 246, 0.15); border-color: var(--accent); color: #93C5FD; }
-        .feedback-card.danger { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); color: #FCA5A5; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+.section-title { font-size: 1.25rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
+.text-orange { color: var(--primary); }
+.text-blue { color: var(--accent); }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(5px); }
-        .modal-overlay.open { opacity: 1; visibility: visible; }
-        .modal-content { background: #1E293B; border-radius: 28px; border: 1px solid rgba(255,255,255,0.1); padding: 30px; max-width: 500px; width: 90%; transform: scale(0.9); transition: all 0.3s; position: relative; }
-        .modal-overlay.open .modal-content { transform: scale(1); }
-        .modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-gray); font-size: 1.2rem; cursor: pointer; }
-        
-        /* RESTORED SCALE GRID BEAUTY */
-        .scale-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; }
-        .scale-item { background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
+.course-row {
+display: grid;
+grid-template-columns: 40px 2fr 1.2fr 2fr auto;
+gap: 12px;
+align-items: center;
+background: rgba(255, 255, 255, 0.03);
+padding: 12px;
+border-radius: 18px;
+margin-bottom: 12px;
+animation: slideIn 0.3s ease-out forwards;
+border: 1px solid transparent;
+}
+.retake-row { grid-template-columns: 40px 2fr 1.2fr 1.5fr 30px 1.5fr auto; }
+.course-row:hover { border-color: rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); }
+.course-row input, .course-row select { background: transparent; border: 1px solid #475569; color: white; padding: 8px 12px; border-radius: 14px; width: 100%; height: 40px; }
+.course-row input:focus, .course-row select:focus { border-color: var(--accent); outline: none; background: rgba(15, 23, 42, 0.95); }
+.course-row select option { background: #1E293B; color: white; font-family: monospace; }
 
-        .tuition-result { background: rgba(0,0,0,0.2); border-radius: 18px; padding: 15px; margin-top: 20px; }
-        .tuition-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; color: var(--text-gray); }
-        .tuition-row.final { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px; color: white; font-weight: bold; font-size: 1.2rem; }
-        .saving-badge { background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-left: 5px; }
+.credit-wrapper { display: flex; gap: 5px; align-items: center; }
+.btn-toggle-input {
+background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+color: var(--text-gray); width: 40px; height: 40px; border-radius: 8px;
+cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.btn-toggle-input:hover { background: var(--accent); color: white; border-color: var(--accent); }
 
-        .footer { margin-top: 40px; text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; }
-        .social-btn { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 1.2rem; text-decoration: none; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
-        .social-btn:hover { transform: translateY(-3px); }
-        .social-btn.fb:hover { background: #1877F2; color: white; border-color: #1877F2; }
-        .social-btn.in:hover { background: #E4405F; color: white; border-color: #E4405F; }
+.row-num { font-weight: 700; color: var(--text-gray); text-align: center; }
+.btn { border: none; padding: 10px 16px; border-radius: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; }
 
-        /* MOBILE FLOATING BUTTON STYLES */
-        .mobile-fab-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 99;
-            background: linear-gradient(to top, var(--bg-dark) 0%, transparent 100%);
-            padding: 20px;
-            pointer-events: none;
-            display: none;
-        }
+/* Refined Add Course / Retake buttons – now match the Calculate button size */
+.btn-add, .btn-add-retake {
+padding: 14px 40px;                /* equal to Calculate button */
+font-size: 1rem;              /* same as Calculate */
+border-radius: 24px;          /* same as Calculate */
+width: 70%;                  /* remove full width */
+max-width: 1200px;             /* same max-width as Calculate */
+margin-left: auto;
+margin-right: auto;
+justify-content: center;
+align-items: center;
+gap: 8px;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+display: flex;                /* override .btn inline-flex */
+}
+.btn-add i, .btn-add-retake i {
+font-size: 1rem;              /* match button text size */
+}
+.btn-add {
+background: linear-gradient(145deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
+color: var(--accent);
+border: 1px solid rgba(59, 130, 246, 0.4);
+backdrop-filter: blur(4px);
+}
+.btn-add:hover {
+background: var(--accent);
+color: white;
+border-color: var(--accent);
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+.btn-add-retake {
+background: linear-gradient(145deg, rgba(255, 138, 0, 0.1), rgba(255, 138, 0, 0.2));
+color: var(--primary);
+border: 1px solid rgba(255, 138, 0, 0.4);
+backdrop-filter: blur(4px);
+}
+.btn-add-retake:hover {
+background: var(--primary);
+color: white;
+border-color: var(--primary);
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(255, 138, 0, 0.3);
+}
 
-        .mobile-fab {
-            background: linear-gradient(135deg, var(--accent) 0%, #2563EB 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 16px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-            pointer-events: all;
-            margin: 0 auto;
-            max-width: 280px;
-            position: relative;
-            overflow: hidden;
-        }
+.btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 8px; border-radius: 8px; }
+.btn-delete:hover { background: var(--danger); color: white; }
+.btn-calc { width: 100%; background: linear-gradient(135deg, var(--accent) 0%, #2563EB 100%); color: white; font-size: 1rem; padding: 14px; margin-top: 10px; border-radius: 24px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); }
+.btn-calc:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5); }
 
-        .mobile-fab::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+.result-container { margin-top: 30px; display: none; animation: fadeInUp 0.5s ease-out; }
+.result-container.active { display: block; }
+.stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+.stat-card { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; border-radius: 22px; text-align: center; position: relative; overflow: hidden; }
+.stat-card.primary { background: linear-gradient(135deg, var(--primary) 0%, #FF6B00 100%); border: none; grid-column: span 3; }
+.stat-card.secondary { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); grid-column: span 3; }
+.stat-card.tertiary { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); grid-column: span 2; }
+.stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; opacity: 0.9; }
+.stat-value { font-size: 2rem; font-weight: 800; line-height: 1; color: white; }
+.stat-sub { font-size: 0.75rem; opacity: 0.8; margin-top: 5px; font-weight: 300; }
 
-        .mobile-fab:hover::before,
-        .mobile-fab:focus-visible::before {
-            opacity: 1;
-        }
+/* Enhanced Chart Container */
+.chart-wrapper {
+margin-top: 25px;
+height: 300px;
+width: 100%;
+position: relative;
+background: rgba(0,0,0,0.2);
+border-radius: 24px;
+padding: 15px;
+}
+.chart-title {
+text-align: center;
+color: var(--text-gray);
+font-size: 0.9rem;
+margin-bottom: 10px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
 
-        .mobile-fab:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6);
-        }
+.download-group { display: flex; gap: 10px; margin-top: 20px; }
+.btn-pdf { flex: 1; background: #10B981; color: white; padding: 14px; justify-content: center; font-size: 0.95rem; }
+.btn-img { flex: 1; background: #6366F1; color: white; padding: 14px; justify-content: center; font-size: 0.95rem; }
 
-        .mobile-fab:active {
-            transform: translateY(-1px);
-        }
+/* Feedback card removed - no longer displayed */
+.feedback-card { display: none; }
 
-        .mobile-fab:focus-visible {
-            outline: 2px solid white;
-            outline-offset: 2px;
-        }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s; backdrop-filter: blur(5px); }
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-content { background: #1E293B; border-radius: 28px; border: 1px solid rgba(255,255,255,0.1); padding: 30px; max-width: 500px; width: 90%; transform: scale(0.9); transition: all 0.3s; position: relative; }
+.modal-overlay.open .modal-content { transform: scale(1); }
+.modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-gray); font-size: 1.2rem; cursor: pointer; }
 
-        .mobile-fab i {
-            font-size: 1.1rem;
-        }
+/* Install modal scrollable on mobile */
+#installModal .modal-content {
+max-height: 80vh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+}
 
-        .mobile-fab-text {
-            display: block;
-            white-space: nowrap;
-        }
+.scale-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin-top: 15px; }
+.scale-item { background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; }
 
-        /* Hide desktop button on mobile */
-        .btn-calc.desktop-only {
-            display: block;
-        }
+.tuition-result { background: rgba(0,0,0,0.2); border-radius: 18px; padding: 15px; margin-top: 20px; }
+.tuition-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; color: var(--text-gray); }
+.tuition-row.final { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px; color: white; font-weight: bold; font-size: 1.2rem; }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
+.install-section { margin-bottom: 25px; }
+.install-badge { display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 20px; margin-bottom: 10px; }
+.install-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.install-platforms { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; margin: 20px 0; }
+.platform-item { text-align: center; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 14px; }
+.platform-item i { font-size: 1.5rem; margin-bottom: 5px; }
+.platform-item span { font-size: 0.7rem; }
 
-        /* RESPONSIVE - Show floating button on mobile */
-        @media (max-width: 768px) {
-            .mobile-fab-container {
-                display: block;
-            }
-            
-            .btn-calc.desktop-only {
-                display: none;
-            }
-            
-            body {
-                padding-bottom: 100px; /* Extra space for FAB */
-            }
-            
-            /* Optimize for mobile */
-            .course-row { grid-template-columns: 1fr 1fr; gap: 10px; padding-bottom: 50px; }
-            .course-row input:first-of-type { grid-column: span 2; }
-            .row-num { display: none; }
-            .btn-delete { position: absolute; bottom: 8px; right: 8px; width: auto; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .stat-card.primary, .stat-card.secondary, .stat-card.tertiary { grid-column: span 1; }
-            .credit-wrapper { grid-column: span 2; }
-            
-            /* Adjust header for mobile */
-            .header { margin-bottom: 30px; }
-            .logo-icon { font-size: 2.5rem; }
-            h1 { font-size: 2rem; }
-            
-            /* Smaller glass cards on mobile */
-            .glass-card { padding: 24px; margin-bottom: 20px; }
-            
-            /* Better menu positioning */
-            .dropdown-menu { width: min(280px, 90vw); }
-        }
+.footer { margin-top: 40px; text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 15px; }
+.social-btn { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 1.2rem; text-decoration: none; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+.social-btn:hover { transform: translateY(-3px); }
+.social-btn.fb:hover { background: #1877F2; color: white; border-color: #1877F2; }
+.social-btn.in:hover { background: #E4405F; color: white; border-color: #E4405F; }
 
-        /* Tablet adjustments */
-        @media (max-width: 1024px) {
-            .container { padding: 0 10px; }
-            .input-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        }
+/* Floating button - scales smoothly with window resize */
+.mobile-fab-container {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 99;
+background: linear-gradient(to top, var(--bg-dark) 0%, transparent 100%);
+padding: 20px;
+pointer-events: none;
+display: none;
+}
 
-        /* Small mobile optimizations */
-        @media (max-width: 480px) {
-            .mobile-fab { padding: 14px 20px; font-size: 0.95rem; max-width: 250px; }
-            .mobile-fab i { font-size: 1rem; }
-            .mobile-fab-text { font-size: 0.9rem; }
-            
-            .glass-card { padding: 20px; }
-            .section-title { font-size: 1.1rem; }
-            
-            /* Stack stats on very small screens */
-            .stat-card { padding: 16px 12px; }
-            .stat-value { font-size: 1.5rem; }
-            
-            /* Smaller chart on mobile */
-            .chart-wrapper { height: 320px; padding: 15px; }
-        }
+.mobile-fab {
+background: rgba(59, 130, 246, 0.25);
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+border: 1px solid rgba(255, 255, 255, 0.2);
+color: white;
+border-radius: 50px;
+padding: 2.5vh 5vw; /* Responsive padding using viewport units */
+font-size: clamp(1rem, 4vw, 1.3rem); /* Responsive font size */
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+pointer-events: all;
+margin: 0 auto;
+width: min(90%, 400px); /* Scales with window width, max 400px */
+position: relative;
+overflow: hidden;
+animation: glow 2s infinite ease-in-out;
+}
 
-        /* Ensure FAB doesn't overlap content */
-        @media (max-width: 768px) {
-            .result-container.active {
-                margin-bottom: 20px;
-            }
-            
-            /* Add smooth scroll offset */
-            html { scroll-behavior: smooth; }
-            
-            /* Prevent horizontal overflow */
-            body { overflow-x: hidden; }
-        }
-    </style>
+@keyframes glow {
+0% { box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); }
+50% { box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6); }
+100% { box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); }
+}
+
+.mobile-fab:hover {
+background: rgba(59, 130, 246, 0.35);
+transform: translateY(-2px);
+box-shadow: 0 8px 30px rgba(59, 130, 246, 0.8);
+}
+
+.mobile-fab i {
+font-size: 1.2rem;
+color: white;
+}
+
+.mobile-fab-text {
+display: block;
+white-space: nowrap;
+color: white;
+font-weight: 600;
+}
+
+.btn-calc.desktop-only {
+display: block;
+width: 65%;
+max-width: 800px;
+margin-left: auto;
+margin-right: auto;
+}
+
+@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Desktop & Tablet (screens wider than 400px) hide floating button, show desktop calculate button */
+@media (min-width: 401px) {
+.mobile-fab-container {
+display: none !important;
+}
+.btn-calc.desktop-only {
+display: block !important;
+}
+}
+
+/* Small phones (≤400px) show floating button, hide desktop calculate button */
+@media (max-width: 400px) {
+.mobile-fab-container {
+display: block !important;
+}
+.btn-calc.desktop-only {
+display: none !important;
+}
+body {
+padding-bottom: 100px;
+}
+.course-row {
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+position: relative;
+padding-bottom: 45px;
+}
+.course-row input:first-of-type {
+grid-column: span 2;
+}
+.row-num {
+display: none;
+}
+.btn-delete {
+position: absolute;
+bottom: 8px;
+right: 8px;
+width: auto;
+}
+.stats-grid {
+grid-template-columns: 1fr;
+}
+.stat-card.primary,
+.stat-card.secondary,
+.stat-card.tertiary {
+grid-column: span 1;
+}
+.credit-wrapper {
+grid-column: span 2;
+}
+.header {
+margin-bottom: 30px;
+}
+.logo-icon {
+font-size: 2.5rem;
+}
+h1 {
+font-size: 2rem;
+}
+.glass-card {
+padding: 24px;
+margin-bottom: 20px;
+}
+.dropdown-menu {
+width: min(280px, 90vw);
+}
+/* Install modal adjustments for small screens */
+#installModal .modal-content {
+padding: 20px;
+}
+.install-badge {
+flex-direction: column;
+text-align: center;
+}
+/* On small screens, Add buttons can become a bit wider but still max-width works */
+.btn-add, .btn-add-retake {
+max-width: 90%;  /* allow them to be almost full width on very small screens */
+}
+}
+
+/* Very small screens < 320px */
+@media (max-width: 320px) {
+.mobile-fab {
+width: 95%;
+padding: 12px 5vw;
+font-size: 1rem;
+}
+.stat-value {
+font-size: 1.5rem;
+}
+.chart-wrapper {
+height: 320px;
+}
+}
+</style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <div class="left-menu-container">
-            <button class="menu-btn" onclick="toggleLeftMenu()">
-                <i class="fas fa-link"></i>
-            </button>
-            <div class="dropdown-menu left-side" id="leftDropdownMenu">
-                <a href="https://uiuqb.vercel.app/" target="_blank" class="menu-item">
-                    <i class="fas fa-database text-orange"></i> UIU QusetionBank
-                </a>
-                <a href="https://www.uiu.ac.bd/" target="_blank" class="menu-item">
-                    <i class="fas fa-university text-blue"></i> UIU Official
-                </a>
-                <a href="https://ucam.uiu.ac.bd/" target="_blank" class="menu-item">
-                    <i class="fas fa-user-graduate" style="color:var(--success)"></i> UCAM
-                </a>
-                <a href="https://elms.uiu.ac.bd/" target="_blank" class="menu-item">
-                    <i class="fas fa-laptop-code" style="color:#A855F7"></i> eLMS
-                </a>
-            </div>
-        </div>
+<div class="header">
+<div class="left-menu-container">
+<button class="menu-btn" onclick="toggleLeftMenu()">
+<i class="fas fa-home"></i>
+</button>
+<div class="dropdown-menu left-side" id="leftDropdownMenu">
+<!-- INSTALL FEATURE - NOW INCLUDED HERE WITH ALL PLATFORMS -->
+<div class="menu-item" onclick="openInstallModal()">
+<i class="fas fa-download" style="color:#3B82F6"></i> Install App
+</div>
+<div class="menu-item" onclick="window.open('https://uiuqb.vercel.app/', '_blank')">
+<i class="fas fa-book-bookmark" style="color:#10B981"></i> UIU QuestionBank
+</div>
+<div class="menu-item" onclick="window.open('https://uiulinks.vercel.app/', '_blank')">
+<i class="fas fa-sitemap" style="color:#fdf900"></i> UIU Linksphere
+</div>
+<div class="menu-item" onclick="window.open('https://ucam.uiu.ac.bd/', '_blank')">
+<i class="fas fa-user-graduate" style="color:#FF8A00"></i> Ucam
+</div>
+<div class="menu-item" onclick="window.open('https://elms.uiu.ac.bd/', '_blank')">
+<i class="fas fa-desktop" style="color:#A855F7"></i> eLMS
+</div>
+</div>
+</div>
 
-        <div class="top-menu-container">
-            <button class="menu-btn" onclick="toggleMenu()">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-menu" id="dropdownMenu">
-                <div class="menu-item" onclick="openTuitionModal()">
-                    <i class="fas fa-money-bill-wave text-success"></i> Tuition Estimator
-                </div>
-                <div class="menu-item" onclick="openTargetModal()">
-                    <i class="fas fa-bullseye" style="color:#A855F7"></i> Target Planner
-                </div>
-                
-                <div class="menu-item" onclick="openInstallModal()">
-                    <i class="fas fa-download"></i> Install / Add to Home Screen
-                </div>
+<div class="top-menu-container">
+<button class="menu-btn" onclick="toggleMenu()">
+<i class="fas fa-ellipsis-v"></i>
+</button>
+<div class="dropdown-menu" id="dropdownMenu">
+<div class="menu-item" onclick="openTuitionModal()">
+<i class="fas fa-hand-holding-usd" style="color: #10B981;"></i> Tuition Estimator
+</div>
+<div class="menu-item" onclick="openTargetModal()">
+<i class="fas fa-bullseye" style="color:#A855F7"></i> Target Planner
+</div>
 <div class="menu-item" onclick="openScaleModal()">
-                    <i class="fas fa-list-ol"></i> View Grading Scale
-                </div>
-                <div class="menu-item danger" onclick="resetAll()">
-                    <i class="fas fa-rotate-right"></i> Reset All Data
-                </div>
-            </div>
-        </div>
-
-        <i class="fas fa-graduation-cap logo-icon"></i>
-        <h1>UIU Calc</h1>
-        <p class="subtitle">Plan your trimester with precision</p>
-    </div>
-
-    <div class="glass-card">
-        <div class="input-grid">
-            <div class="input-group">
-                <label>Current CGPA</label>
-                <input type="number" id="currentCGPA" step="0.01" placeholder="e.g. 3.45" oninput="saveData()">
-            </div>
-            <div class="input-group">
-                <label>Credits Complete </label>
-                <input type="number" id="completedCredits" step="1" placeholder="e.g. 85" oninput="saveData()">
-            </div>
-            <div class="input-group">
-                <label>Total Credits</label>
-                <input type="number" id="totalRequiredCredits" step="1" value="138" placeholder="e.g. 138" oninput="saveData()">
-            </div>
-        </div>
-    </div>
-
-    <div class="glass-card">
-        <div class="section-header">
-            <div class="section-title"><i class="fas fa-book-open text-blue"></i> New Courses</div>
-            <span style="font-size: 0.8rem; color: var(--text-gray);">Regular courses</span>
-        </div>
-        <div id="coursesContainer"></div>
-        <button class="btn btn-add" onclick="addCourse()"><i class="fas fa-plus"></i> Add Course</button>
-    </div>
-
-    <div class="glass-card">
-        <div class="section-header">
-            <div class="section-title"><i class="fas fa-sync-alt text-orange"></i> Retake Courses</div>
-            <span style="font-size: 0.8rem; color: var(--text-gray);">Improving grades</span>
-        </div>
-        <div id="retakesContainer"></div>
-        <button class="btn btn-add-retake" onclick="addRetake()"><i class="fas fa-plus"></i> Add Retake</button>
-    </div>
-
-    <button class="btn btn-calc desktop-only" onclick="calculate()">
-        <i class="fas fa-calculator"></i> Calculate Results
-    </button>
-
-    <div id="result" class="result-container">
-        <div id="feedbackMessage" class="feedback-card"></div>
-
-        <div class="glass-card" id="resultCard" style="border-top: 4px solid var(--success);">
-            <div class="result-header">
-                <h3><i class="fas fa-chart-pie"></i> Calculation Report</h3>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card primary">
-                    <div class="stat-label">New CGPA</div>
-                    <div class="stat-value" id="newCGPA">0.00</div>
-                    <div class="stat-sub">Cumulative Grade Point Average</div>
-                </div>
-                <div class="stat-card secondary">
-                    <div class="stat-label">Trimester GPA</div>
-                    <div class="stat-value" id="currentTrimesterGPA">0.00</div>
-                    <div class="stat-sub">Only this trimester</div>
-                </div>
-
-                <div class="stat-card tertiary">
-                    <div class="stat-label" style="color:#A855F7">Trimester Credits</div>
-                    <div class="stat-value" id="trimesterCreditsDisplay">0</div>
-                </div>
-                <div class="stat-card tertiary">
-                    <div class="stat-label" style="color:#94A3B8">Total Credits</div>
-                    <div class="stat-value" id="totalCredits">0</div>
-                </div>
-                <div class="stat-card tertiary">
-                    <div class="stat-label" style="color:#94A3B8">Left Credits</div>
-                    <div class="stat-value" id="remainingCredits">138</div>
-                </div>
-            </div>
-
-            <div class="chart-wrapper">
-                <canvas id="creditChart"></canvas>
-            </div>
-            
-            <div class="download-group" data-html2canvas-ignore="true">
-                <button class="btn btn-pdf" onclick="downloadPDF()">
-                    <i class="fas fa-file-pdf"></i> Save PDF
-                </button>
-                <button class="btn btn-img" onclick="downloadImage()">
-                    <i class="fas fa-image"></i> Save Image
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="social-links">
-            <a href="https://facebook.com/asifaaron062" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://instagram.com/asifaaron62" target="_blank" class="social-btn in"><i class="fab fa-instagram"></i></a>
-        </div>
-        <p class="copyright">Designed by Asif Rahman</p>
-    </footer>
+<i class="fas fa-ranking-star" style="color: #FF8A00;"></i> Grading Scale
+</div>
+<div class="menu-item danger" onclick="resetAll()">
+<i class="fas fa-times" style="color: #EF4444;"></i> Reset All Data
+</div>
+</div>
 </div>
 
-<!-- MOBILE FLOATING ACTION BUTTON -->
+<i class="fas fa-graduation-cap logo-icon"></i>
+<h1>UIU Calc</h1>
+<p class="subtitle">Plan your trimester with precision</p>
+</div>
+
+<div class="glass-card">
+<div class="input-grid">
+<div class="input-group">
+<label>Current CGPA</label>
+<input type="number" id="currentCGPA" step="0.01" min="0" max="4" placeholder="e.g. 3.45">
+</div>
+<div class="input-group">
+<label>Credits Complete</label>
+<input type="number" id="completedCredits" step="1" min="0" placeholder="e.g. 85">
+</div>
+<div class="input-group">
+<label>Total Credits</label>
+<input type="number" id="totalRequiredCredits" step="1" min="1" value="138" placeholder="e.g. 138">
+</div>
+</div>
+</div>
+
+<div class="glass-card">
+<div class="section-header">
+<div class="section-title"><i class="fas fa-book-open text-blue"></i> New Courses</div>
+<span style="font-size: 0.8rem; color: var(--text-gray);">Regular co</span>
+</div>
+<div id="coursesContainer"></div>
+<button class="btn btn-add" onclick="addCourse()"><i class="fas fa-plus"></i> Add Course</button>
+</div>
+
+<div class="glass-card">
+<div class="section-header">
+<div class="section-title"><i class="fas fa-sync-alt text-orange"></i> Retake Courses</div>
+<span style="font-size: 0.8rem; color: var(--text-gray);">Improving</span>
+</div>
+<div id="retakesContainer"></div>
+<button class="btn btn-add-retake" onclick="addRetake()"><i class="fas fa-plus"></i> Add Retake</button>
+</div>
+
+<!-- Desktop calculate button (hidden on small screens) -->
+<button class="btn btn-calc desktop-only" onclick="calculate()">
+<i class="fas fa-calculator"></i> Calculate Results
+</button>
+
+<div id="result" class="result-container">
+<!-- Feedback card removed -->
+
+<div class="glass-card" id="resultCard" style="border-top: 4px solid var(--success);">
+<div class="result-header">
+<h3><i class="fas fa-chart-pie"></i> Calculation Report</h3>
+</div>
+<div class="stats-grid">
+<div class="stat-card primary">
+<div class="stat-label">New CGPA</div>
+<div class="stat-value" id="newCGPA">0.00</div>
+<div class="stat-sub">Cumulative Grade Point Average</div>
+</div>
+<div class="stat-card secondary">
+<div class="stat-label">Trimester GPA</div>
+<div class="stat-value" id="currentTrimesterGPA">0.00</div>
+<div class="stat-sub">Only this trimester</div>
+</div>
+
+<div class="stat-card tertiary">
+<div class="stat-label" style="color:#A855F7">Trimester Credits</div>
+<div class="stat-value" id="trimesterCreditsDisplay">0</div>
+</div>
+<div class="stat-card tertiary">
+<div class="stat-label" style="color:#94A3B8">Total Credits</div>
+<div class="stat-value" id="totalCredits">0</div>
+</div>
+<div class="stat-card tertiary">
+<div class="stat-label" style="color:#94A3B8">Left Credits</div>
+<div class="stat-value" id="remainingCredits">138</div>
+</div>
+</div>
+
+<div class="chart-wrapper">
+<div class="chart-title">Credit Distribution</div>
+<canvas id="creditChart"></canvas>
+</div>
+
+<div class="download-group" data-html2canvas-ignore="true">
+<button class="btn btn-pdf" onclick="downloadPDF()">
+<i class="fas fa-file-pdf"></i> Save PDF
+</button>
+<button class="btn btn-img" onclick="downloadImage()">
+<i class="fas fa-image"></i> Save Image
+</button>
+</div>
+</div>
+</div>
+
+<footer class="footer">
+<div class="social-links">
+<a href="https://facebook.com/asifaaron062" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
+<a href="https://instagram.com/asifaaron62" target="_blank" class="social-btn in"><i class="fab fa-instagram"></i></a>
+</div>
+<p class="copyright">Designed by <strong>Asif Rahman</strong> </p>
+</footer>
+</div>
+
+<!-- Floating Action Button for small screens (≤400px) -->
 <div class="mobile-fab-container">
-    <button class="mobile-fab" onclick="calculate()" aria-label="Calculate Results">
-        <i class="fas fa-calculator" aria-hidden="true"></i>
-        <span class="mobile-fab-text">Calculate</span>
-    </button>
+<button class="mobile-fab" onclick="calculate()" aria-label="Calculate Results">
+<i class="fas fa-calculator" aria-hidden="true"></i>
+<span class="mobile-fab-text">Calculate</span>
+</button>
 </div>
 
-<!-- MODALS (unchanged) -->
+<!-- MODALS -->
 <div class="modal-overlay" id="scaleModal" onclick="closeModal(event, 'scaleModal')">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal(null, 'scaleModal')"><i class="fas fa-times"></i></button>
-        <h3 style="color:white; margin-bottom: 20px; text-align: center;">UIU Grading Scale</h3>
-        <div class="scale-grid" id="scaleGrid"></div>
-    </div>
+<div class="modal-content">
+<button class="modal-close" onclick="closeModal(null, 'scaleModal')"><i class="fas fa-times"></i></button>
+<h3 style="color:white; margin-bottom: 20px; text-align: center;">UIU Grading Scale</h3>
+<div class="scale-grid" id="scaleGrid"></div>
+</div>
 </div>
 
 <div class="modal-overlay" id="targetModal" onclick="closeModal(event, 'targetModal')">
-    <div class="modal-content" style="border-top: 4px solid #A855F7;">
-        <button class="modal-close" onclick="closeModal(null, 'targetModal')"><i class="fas fa-times"></i></button>
-        <h3 style="color:white; margin-bottom: 5px; text-align: center;"><i class="fas fa-bullseye" style="color:#A855F7"></i> Target Planner</h3>
-        <p style="text-align:center; color:var(--text-gray); font-size:0.9rem; margin-bottom:20px;">Calculate required GPA to reach your goal</p>
-        
-        <div class="input-group" style="margin-bottom: 15px;">
-            <label>Desired Graduation CGPA</label>
-            <input type="number" id="targetCGPA" placeholder="e.g. 3.80" oninput="calculateTarget()">
-        </div>
-        <div id="targetResult" class="target-result-text">Enter a target to see required GPA.</div>
-    </div>
+<div class="modal-content" style="border-top: 4px solid #A855F7;">
+<button class="modal-close" onclick="closeModal(null, 'targetModal')"><i class="fas fa-times"></i></button>
+<h3 style="color:white; margin-bottom: 5px; text-align: center;"><i class="fas fa-bullseye" style="color:#A855F7"></i> Target Planner</h3>
+<p style="text-align:center; color:var(--text-gray); font-size:0.9rem; margin-bottom:20px;">Calculate required GPA to reach your goal</p>
+
+<div class="input-group" style="margin-bottom: 15px;">
+<label>Desired Graduation CGPA</label>
+<input type="number" id="targetCGPA" min="0" max="4" step="0.01" placeholder="e.g. 3.80" oninput="calculateTarget()">
+</div>
+<div id="targetResult" class="target-result-text" style="text-align:center; color:var(--text-gray);">Enter a target to see required GPA.</div>
+</div>
 </div>
 
 <div class="modal-overlay" id="tuitionModal" onclick="closeModal(event, 'tuitionModal')">
-    <div class="modal-content" style="border-top: 4px solid var(--success);">
-        <button class="modal-close" onclick="closeModal(null, 'tuitionModal')"><i class="fas fa-times"></i></button>
-        <h3 style="color:white; margin-bottom: 5px; text-align: center;"><i class="fas fa-money-bill-wave text-success"></i> Tuition Estimator</h3>
-        <p style="text-align:center; color:var(--text-gray); font-size:0.85rem; margin-bottom:20px;">Dedicated calculator for trimester costs</p>
-        
-        <div class="input-group" style="margin-bottom: 15px;">
-            <label>Credits to Calculate</label>
-            <div style="display:flex; gap:8px;">
-                <input type="number" id="tuitionCredits" placeholder="e.g. 9" oninput="calculateTuition()">
-                <button class="btn" style="background:rgba(59, 130, 246, 0.2); color:var(--accent); border:1px solid var(--accent); white-space:nowrap; font-size:0.8rem;" onclick="syncTuitionFromCalc()">Sync List</button>
-            </div>
-        </div>
+<div class="modal-content" style="border-top: 4px solid var(--success);">
+<button class="modal-close" onclick="closeModal(null, 'tuitionModal')"><i class="fas fa-times"></i></button>
+<h3 style="color:white; margin-bottom: 5px; text-align: center;"><i class="fas fa-money-bill-wave" style="color: #10B981;"></i> Tuition Estimator</h3>
+<p style="text-align:center; color:var(--text-gray); font-size:0.85rem; margin-bottom:20px;">Dedicated calculator for trimester costs</p>
 
-        <div class="input-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="input-group">
-                <label>Per Credit (Tk)</label>
-                <input type="number" id="ratePerCredit" value="5000" oninput="calculateTuition()">
-            </div>
-            <div class="input-group">
-                <label>Fixed Fee (Tk)</label>
-                <input type="number" id="fixedFee" value="5000" oninput="calculateTuition()">
-            </div>
-        </div>
-        
-        <div class="input-group" style="margin-top: 15px; margin-bottom: 15px;">
-            <label>Waiver / Scholarship</label>
-            <select id="waiverPercent" onchange="calculateTuition()">
-                <option value="0">None (0%)</option>
-                <option value="0.20">Sibling / Spouse (20%)</option>
-                <option value="0.25">Merit (25%)</option>
-                <option value="0.40">Freedom Fighter (40%)</option>
-                <option value="0.50">Merit (50%)</option>
-                <option value="1.00">Merit (100%)</option>
-            </select>
-        </div>
-
-        <div class="tuition-result">
-            <div class="tuition-row">
-                <span>Tuition (Credits × Rate):</span>
-                <span id="baseTuitionDisplay">0</span>
-            </div>
-            <div class="tuition-row">
-                <span>Waiver Discount:</span>
-                <span id="waiverAmountDisplay" style="color:var(--success)">-0</span>
-            </div>
-            <div class="tuition-row">
-                <span>Admission/Fixed Fees:</span>
-                <span id="fixedFeeDisplay">5000</span>
-            </div>
-            <div class="tuition-row final">
-                <span>Total Payable:</span>
-                <span id="totalPayableDisplay" style="color:#FF8A00">0 Tk</span>
-            </div>
-        </div>
-    </div>
+<div class="input-group" style="margin-bottom: 15px;">
+<label>Credits to Calculate</label>
+<div style="display:flex; gap:8px;">
+<input type="number" id="tuitionCredits" min="0" placeholder="e.g. 9" value="0" oninput="calculateTuition()">
+<button class="btn" style="background:rgba(59, 130, 246, 0.2); color:var(--accent); border:1px solid var(--accent); white-space:nowrap; font-size:0.8rem;" onclick="syncTuitionFromCalc()">Sync List</button>
+</div>
 </div>
 
+<div class="input-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
+<div class="input-group">
+<label>Per Credit (Tk)</label>
+<input type="number" id="ratePerCredit" min="0" value="5000" oninput="calculateTuition()">
+</div>
+<div class="input-group">
+<label>Fixed Fee (Tk)</label>
+<input type="number" id="fixedFee" min="0" value="5000" oninput="calculateTuition()">
+</div>
+</div>
 
-<!-- INSTALL / ADD TO HOME SCREEN MODAL -->
+<div class="input-group" style="margin-top: 15px; margin-bottom: 15px;">
+<label>Waiver / Scholarship</label>
+<select id="waiverPercent" onchange="calculateTuition()">
+<option value="0">None (0%)</option>
+<option value="0.20">Sibling / Spouse (20%)</option>
+<option value="0.25">Merit (25%)</option>
+<option value="0.40">Freedom Fighter (40%)</option>
+<option value="0.50">Merit (50%)</option>
+<option value="1.00">Merit (100%)</option>
+</select>
+</div>
+
+<div class="tuition-result">
+<div class="tuition-row">
+<span>Tuition (Credits × Rate):</span>
+<span id="baseTuitionDisplay">0</span>
+</div>
+<div class="tuition-row">
+<span>Waiver Discount:</span>
+<span id="waiverAmountDisplay" style="color:var(--success)">-0</span>
+</div>
+<div class="tuition-row">
+<span>Admission/Fixed Fees:</span>
+<span id="fixedFeeDisplay">5000</span>
+</div>
+<div class="tuition-row final">
+<span>Total Payable:</span>
+<span id="totalPayableDisplay" style="color:#FF8A00">0 Tk</span>
+</div>
+</div>
+</div>
+</div>
+
 <div class="modal-overlay" id="installModal" onclick="closeModal(event, 'installModal')">
-    <div class="modal-content" style="border-top: 4px solid var(--accent);">
-        <button class="modal-close" onclick="closeModal(null, 'installModal')"><i class="fas fa-times"></i></button>
-        <h3 style="color:white; margin-bottom: 8px; text-align: center;">
-            <i class="fas fa-download" style="color:var(--accent)"></i> Install UIU Calc
-        </h3>
-        <p style="text-align:center; color:var(--text-gray); font-size:0.9rem; margin-bottom:18px;">
-            Add it to your Home screen / Apps menu for quick access.
-        </p>
+<div class="modal-content" style="border-top: 4px solid var(--accent); max-width: 600px;">
+<button class="modal-close" onclick="closeModal(null, 'installModal')"><i class="fas fa-times"></i></button>
+<h3 style="color:white; margin-bottom: 15px; text-align: center;">
+<i class="fas fa-download" style="color:var(--accent)"></i> Install UIU Calc
+</h3>
 
-        <div id="installPrimaryAction" style="display:none; text-align:center; margin-bottom:18px;">
-            <button class="btn btn-calc" style="width:100%; max-width:360px; border-radius: 999px; margin: 0 auto;" onclick="promptInstall()">
-                <i class="fas fa-plus-square"></i> Install Now
-            </button>
-            <div style="margin-top:10px; color:var(--text-gray); font-size:0.82rem;">
-                If your browser supports it, you'll see a native install prompt.
-            </div>
-        </div>
-
-        <div class="glass-card" style="margin:0; padding:18px; border-radius: 22px;">
-            <div style="font-weight:700; margin-bottom:8px;">Manual steps (Android / Windows / Ubuntu)</div>
-            <ol style="margin-left:18px; color:var(--text-gray); line-height:1.6;">
-                <li><b>Chrome / Edge:</b> open the browser menu (⋮ or ⋯).</li>
-                <li>Select <b>Install app</b> or <b>Add to Home screen</b>.</li>
-                <li>Confirm — it will appear like a normal app (standalone window).</li>
-            </ol>
-
-            <div style="margin-top:12px; color:var(--text-gray); line-height:1.6;">
-                <b>Tip:</b> On desktop, you can also click the <b>install icon</b> in the address bar (if it appears).
-            </div>
-        </div>
-    </div>
+<!-- INSTALL BADGE for PWA -->
+<div id="installPrimaryAction" style="display:none; text-align:center; margin-bottom: 20px;">
+<button class="btn btn-calc" style="width:100%; max-width:360px; border-radius: 999px; margin: 0 auto;" onclick="promptInstall()">
+<i class="fas fa-plus-square"></i> Install Now (PWA)
+</button>
 </div>
 
+<!-- ALL PLATFORMS INSTALL GUIDE -->
+<div class="install-section">
+<h4 style="color:white; margin-bottom:15px;"><i class="fas fa-globe"></i> Install on any device</h4>
 
-<!-- Scripts (unchanged) -->
+<div class="install-platforms">
+<div class="platform-item"><i class="fab fa-windows" style="color:#00A4EF;"></i><br><span>Windows</span></div>
+<div class="platform-item"><i class="fab fa-apple" style="color:#A2AAAD;"></i><br><span>macOS</span></div>
+<div class="platform-item"><i class="fab fa-android" style="color:#3DDC84;"></i><br><span>Android</span></div>
+<div class="platform-item"><i class="fab fa-apple" style="color:#A2AAAD;"></i><br><span>iOS</span></div>
+<div class="platform-item"><i class="fab fa-linux" style="color:#FCC624;"></i><br><span>Linux</span></div>
+<div class="platform-item"><i class="fas fa-desktop" style="color:#94A3B8;"></i><br><span>ChromeOS</span></div>
+</div>
+
+<!-- Detailed installation guides by platform -->
+<div style="margin-top:20px;">
+<div class="install-badge">
+<div class="install-icon" style="background:#00A4EF;"><i class="fab fa-windows"></i></div>
+<div><b>Windows (Chrome/Edge):</b> Click ⋮ menu → "Install UIU Calc" or "Apps" → "Install this site as an app"</div>
+</div>
+
+<div class="install-badge">
+<div class="install-icon" style="background:#A2AAAD;"><i class="fab fa-apple"></i></div>
+<div><b>macOS (Safari):</b> Click Share button → "Add to Dock" or "Add to Applications"</div>
+</div>
+
+<div class="install-badge">
+<div class="install-icon" style="background:#3DDC84;"><i class="fab fa-android"></i></div>
+<div><b>Android (Chrome):</b> Tap ⋮ menu → "Install app" or "Add to Home screen"</div>
+</div>
+
+<div class="install-badge">
+<div class="install-icon" style="background:#A2AAAD;"><i class="fab fa-apple"></i></div>
+<div><b>iOS (Safari):</b> Tap Share button → "Add to Home Screen"</div>
+</div>
+
+<div class="install-badge">
+<div class="install-icon" style="background:#FCC624;"><i class="fab fa-linux"></i></div>
+<div><b>Linux (Chrome):</b> Click ⋮ menu → "Install UIU Calc" or "Create shortcut..."</div>
+</div>
+</div>
+
+<!-- Quick tips -->
+<div style="background:rgba(0,0,0,0.3); border-radius:20px; padding:15px; margin-top:15px;">
+<p style="color:var(--text-gray); margin-bottom:5px;"><i class="fas fa-lightbulb" style="color:var(--primary);"></i> <b>Pro tip:</b> Once installed, UIU Calc works offline and opens like a native app!</p>
+</div>
+</div>
+</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -618,481 +743,571 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
 <script>
-    // FIX 1: Safely register plugins to prevent crashes
-    const gradeData = {
-        'A':  { point: 4.00, range: '90-100' },
-        'A-': { point: 3.67, range: '86-89' },
-        'B+': { point: 3.33, range: '82-85' },
-        'B':  { point: 3.00, range: '78-81' },
-        'B-': { point: 2.67, range: '74-77' },
-        'C+': { point: 2.33, range: '70-73' },
-        'C':  { point: 2.00, range: '66-69' },
-        'C-': { point: 1.67, range: '62-65' },
-        'D+': { point: 1.33, range: '58-61' },
-        'D':  { point: 1.00, range: '55-57' },
-        'F':  { point: 0.00, range: '00-54' }
-    };
+// Grade data with marks included
+const gradeData = {
+'A':  { point: 4.00, range: '90-100' },
+'A-': { point: 3.67, range: '86-89' },
+'B+': { point: 3.33, range: '82-85' },
+'B':  { point: 3.00, range: '78-81' },
+'B-': { point: 2.67, range: '74-77' },
+'C+': { point: 2.33, range: '70-73' },
+'C':  { point: 2.00, range: '66-69' },
+'C-': { point: 1.67, range: '62-65' },
+'D+': { point: 1.33, range: '58-61' },
+'D':  { point: 1.00, range: '55-57' },
+'F':  { point: 0.00, range: '00-54' }
+};
 
-    let courses=[], retakes=[], courseCounter=0, retakeCounter=0;
-    let myChart = null;
+let courses = [], retakes = [], courseCounter = 0, retakeCounter = 0;
+let myChart = null;
+let deferredInstallPrompt = null;
 
-    // --- PWA INSTALL (Android / Windows / Ubuntu via Chromium browsers) ---
-    let deferredInstallPrompt = null;
+// Initialize Chart.js plugins safely
+try {
+if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
+Chart.register(ChartDataLabels);
+}
+} catch (e) {
+console.warn('Chart plugin registration failed');
+}
 
-    function openInstallModal() {
-        const modal = document.getElementById('installModal');
-        if (!modal) return;
-        modal.classList.add('open');
+// Reset all data on page load
+function resetToDefault() {
+courses = [];
+retakes = [];
+courseCounter = 0;
+retakeCounter = 0;
 
-        // Show the primary "Install Now" button only when the browser provides a prompt
-        const primary = document.getElementById('installPrimaryAction');
-        if (primary) primary.style.display = deferredInstallPrompt ? 'block' : 'none';
+// Clear input fields
+document.getElementById('currentCGPA').value = '';
+document.getElementById('completedCredits').value = '';
+document.getElementById('totalRequiredCredits').value = 138;
 
-        // Close any open menus
-        const rightMenu = document.getElementById('dropdownMenu');
-        if (rightMenu) rightMenu.classList.remove('show');
-    }
+// Reset tuition fields to defaults
+document.getElementById('tuitionCredits').value = '0';
+document.getElementById('ratePerCredit').value = '5000';
+document.getElementById('fixedFee').value = '5000';
+document.getElementById('waiverPercent').value = '0';
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent automatic mini-infobar on mobile
-        e.preventDefault();
-        deferredInstallPrompt = e;
+// Clear result display
+document.getElementById('result').classList.remove('active');
+document.getElementById('newCGPA').textContent = '0.00';
+document.getElementById('currentTrimesterGPA').textContent = '0.00';
+document.getElementById('totalCredits').textContent = '0';
+document.getElementById('remainingCredits').textContent = '138';
+document.getElementById('trimesterCreditsDisplay').textContent = '0';
 
-        // If the modal is open, reveal the primary action
-        const primary = document.getElementById('installPrimaryAction');
-        if (primary) primary.style.display = 'block';
-    });
+// Re-render empty courses
+renderCourses();
+renderRetakes();
 
-    window.addEventListener('appinstalled', () => {
-        deferredInstallPrompt = null;
-        // Optional: give a tiny feedback
-        const feedback = document.getElementById('feedbackMessage');
-        if (feedback) {
-            feedback.className = 'feedback-card success';
-            feedback.style.display = 'block';
-            feedback.innerHTML = `<h3>Installed!</h3><p>You can now open UIU Calc from your apps/home screen.</p>`;
-        }
-    });
+// Add one empty course as default
+addCourse();
 
-    async function promptInstall() {
-        if (!deferredInstallPrompt) {
-            openInstallModal();
-            return;
-        }
-        deferredInstallPrompt.prompt();
-        try { await deferredInstallPrompt.userChoice; } catch (err) {}
-        deferredInstallPrompt = null;
+// Recalculate tuition with defaults
+calculateTuition();
+}
 
-        // Hide primary action after using it
-        const primary = document.getElementById('installPrimaryAction');
-        if (primary) primary.style.display = 'none';
-    }
+window.onload = function() {
+// Reset everything to default on page load
+resetToDefault();
 
-    // --- SERVICE WORKER (basic offline support) ---
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
-        });
-    }
- 
+// Shift+Enter to calculate (kept functionality but no UI hint)
+document.addEventListener('keydown', function(e) {
+if (e.key === 'Enter' && e.shiftKey) {
+e.preventDefault();
+calculate();
+// Visual feedback
+const btn = document.querySelector('.btn-calc, .mobile-fab');
+if (btn) {
+btn.style.transform = 'scale(0.95)';
+setTimeout(() => btn.style.transform = '', 100);
+}
+}
+});
 
-    window.onload = function() {
-        if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') {
-            Chart.register(ChartDataLabels);
-        }
-        populateGradingScale();
-        loadData(); 
-        
-        document.addEventListener('click', function(e) {
-            const rightMenu = document.getElementById('dropdownMenu');
-            const rightBtn = document.querySelector('.top-menu-container .menu-btn');
-            const leftMenu = document.getElementById('leftDropdownMenu');
-            const leftBtn = document.querySelector('.left-menu-container .menu-btn');
+// Close menus when clicking outside
+document.addEventListener('click', function(e) {
+const rightMenu = document.getElementById('dropdownMenu');
+const rightBtn = document.querySelector('.top-menu-container .menu-btn');
+const leftMenu = document.getElementById('leftDropdownMenu');
+const leftBtn = document.querySelector('.left-menu-container .menu-btn');
 
-            if (rightMenu && !rightMenu.contains(e.target) && !rightBtn.contains(e.target)) {
-                rightMenu.classList.remove('show');
-            }
-            if (leftMenu && !leftMenu.contains(e.target) && !leftBtn.contains(e.target)) {
-                leftMenu.classList.remove('show');
-            }
-        });
-    };
+if (rightMenu && !rightMenu.contains(e.target) && !rightBtn.contains(e.target)) {
+rightMenu.classList.remove('show');
+}
+if (leftMenu && !leftMenu.contains(e.target) && !leftBtn.contains(e.target)) {
+leftMenu.classList.remove('show');
+}
+});
 
-    // --- LOCAL STORAGE ---
-    function saveData() {
-        const data = {
-            currentCGPA: document.getElementById('currentCGPA').value,
-            completedCredits: document.getElementById('completedCredits').value,
-            totalRequiredCredits: document.getElementById('totalRequiredCredits').value,
-            courses: courses,
-            retakes: retakes,
-            ratePerCredit: document.getElementById('ratePerCredit').value,
-            fixedFee: document.getElementById('fixedFee').value,
-            tuitionCredits: document.getElementById('tuitionCredits').value
-        };
-        localStorage.setItem('uiuCalcData', JSON.stringify(data));
-        calculateTarget(); 
-    }
+// Preload calculator icon
+const icon = document.createElement('i');
+icon.className = 'fas fa-calculator';
+document.head.appendChild(icon);
+};
 
-    function loadData() {
-        const saved = localStorage.getItem('uiuCalcData');
-        if (saved) {
-            const data = JSON.parse(saved);
-            document.getElementById('currentCGPA').value = data.currentCGPA || '';
-            document.getElementById('completedCredits').value = data.completedCredits || '';
-            document.getElementById('totalRequiredCredits').value = data.totalRequiredCredits || 138;
-            if(data.ratePerCredit) document.getElementById('ratePerCredit').value = data.ratePerCredit;
-            if(data.fixedFee) document.getElementById('fixedFee').value = data.fixedFee;
-            if(data.tuitionCredits) document.getElementById('tuitionCredits').value = data.tuitionCredits;
+// PWA Installation
+window.addEventListener('beforeinstallprompt', (e) => {
+e.preventDefault();
+deferredInstallPrompt = e;
+document.getElementById('installPrimaryAction').style.display = 'block';
+});
 
-            courses = data.courses || [];
-            retakes = data.retakes || [];
-            courseCounter = courses.length ? Math.max(...courses.map(c => c.id)) : 0;
-            retakeCounter = retakes.length ? Math.max(...retakes.map(r => r.id)) : 0;
-            
-            renderCourses();
-            renderRetakes();
-        } else {
-            addCourse(); 
-        }
-    }
+function promptInstall() {
+if (!deferredInstallPrompt) {
+alert('To install, use your browser menu (⋮ or ⋯) and select "Install app" or "Add to Home screen"');
+return;
+}
+deferredInstallPrompt.prompt();
+deferredInstallPrompt = null;
+document.getElementById('installPrimaryAction').style.display = 'none';
+}
 
-    // --- MENUS & MODALS ---
-    function toggleMenu() { 
-        document.getElementById('leftDropdownMenu').classList.remove('show');
-        document.getElementById('dropdownMenu').classList.toggle('show'); 
-    }
+// Menu functions
+function toggleMenu() {
+document.getElementById('leftDropdownMenu').classList.remove('show');
+document.getElementById('dropdownMenu').classList.toggle('show');
+}
 
-    function toggleLeftMenu() { 
-        document.getElementById('dropdownMenu').classList.remove('show');
-        document.getElementById('leftDropdownMenu').classList.toggle('show'); 
-    }
-    
-    function openScaleModal() { 
-        document.getElementById('scaleModal').classList.add('open'); 
-        document.getElementById('dropdownMenu').classList.remove('show'); 
-    }
-    
-    function openTargetModal() {
-        document.getElementById('targetModal').classList.add('open');
-        document.getElementById('dropdownMenu').classList.remove('show');
-        calculateTarget(); 
-    }
+function toggleLeftMenu() {
+document.getElementById('dropdownMenu').classList.remove('show');
+document.getElementById('leftDropdownMenu').classList.toggle('show');
+}
 
-    function openTuitionModal() {
-        document.getElementById('tuitionModal').classList.add('open');
-        document.getElementById('dropdownMenu').classList.remove('show');
-        if(!document.getElementById('tuitionCredits').value) syncTuitionFromCalc();
-        else calculateTuition();
-    }
+function openScaleModal() {
+document.getElementById('scaleModal').classList.add('open');
+document.getElementById('dropdownMenu').classList.remove('show');
+document.getElementById('leftDropdownMenu').classList.remove('show');
+}
 
-    function closeModal(e, modalId) { 
-        if(e === null || e.target.id === modalId) {
-            document.getElementById(modalId).classList.remove('open'); 
-        }
-    }
+function openTargetModal() {
+document.getElementById('targetModal').classList.add('open');
+document.getElementById('dropdownMenu').classList.remove('show');
+document.getElementById('leftDropdownMenu').classList.remove('show');
+calculateTarget();
+}
 
-    // --- TUITION LOGIC ---
-    function syncTuitionFromCalc() {
-        let total = 0;
-        courses.forEach(c => total += (parseInt(c.credit) || 0));
-        retakes.forEach(r => total += (parseInt(r.credit) || 0));
-        document.getElementById('tuitionCredits').value = total;
-        calculateTuition();
-    }
+function openTuitionModal() {
+document.getElementById('tuitionModal').classList.add('open');
+document.getElementById('dropdownMenu').classList.remove('show');
+document.getElementById('leftDropdownMenu').classList.remove('show');
+if (!document.getElementById('tuitionCredits').value || document.getElementById('tuitionCredits').value === '0') {
+syncTuitionFromCalc();
+} else {
+calculateTuition();
+}
+}
 
-    function calculateTuition() {
-        const credits = parseFloat(document.getElementById('tuitionCredits').value) || 0;
-        const rate = parseFloat(document.getElementById('ratePerCredit').value) || 0;
-        const fixed = parseFloat(document.getElementById('fixedFee').value) || 0;
-        const waiver = parseFloat(document.getElementById('waiverPercent').value) || 0;
-        
-        const baseTuition = credits * rate;
-        const discount = baseTuition * waiver;
-        const total = (baseTuition - discount) + fixed;
+function openInstallModal() {
+document.getElementById('installModal').classList.add('open');
+document.getElementById('dropdownMenu').classList.remove('show');
+document.getElementById('leftDropdownMenu').classList.remove('show');
+}
 
-        document.getElementById('baseTuitionDisplay').textContent = baseTuition.toLocaleString();
-        document.getElementById('waiverAmountDisplay').textContent = "-" + discount.toLocaleString() + (waiver > 0 ? ` (${Math.round(waiver*100)}%)` : "");
-        document.getElementById('fixedFeeDisplay').textContent = fixed.toLocaleString();
-        document.getElementById('totalPayableDisplay').textContent = total.toLocaleString() + " Tk";
-        
-        saveData();
-    }
+function closeModal(e, modalId) {
+if (e === null || e.target.id === modalId) {
+document.getElementById(modalId).classList.remove('open');
+}
+}
 
-    // --- CORE CALCULATOR LOGIC ---
-    function populateGradingScale() {
-        const grid = document.getElementById('scaleGrid');
-        grid.innerHTML = ''; // Clear before populating
-        for(let [grade, data] of Object.entries(gradeData)) {
-            grid.innerHTML += `
-                <div class="scale-item">
-                    <span class="scale-grade" style="font-weight:700; color:white;">${grade}</span>
-                    <span class="scale-point" style="color:var(--primary); font-size:1.1rem; font-weight:800;">${data.point.toFixed(2)}</span>
-                    <span class="scale-marks" style="color:var(--text-gray); font-size:0.75rem;">${data.range}</span>
-                </div>
-            `;
-        }
-    }
+// Course management
+function addCourse() {
+courses.push({ id: ++courseCounter, name: '', credit: 3, grade: '', isCustomCredit: false });
+renderCourses();
+}
 
-    function getGradeOptions(selected, label="Grade") {
-        let options = `<option value="" disabled selected>${label}</option>`;
-        for(let [grade, data] of Object.entries(gradeData)) {
-            options += `<option value="${grade}" ${selected===grade?'selected':''}>${grade} (${data.range} | ${data.point.toFixed(2)})</option>`;
-        }
-        return options;
-    }
+function addRetake() {
+retakes.push({ id: ++retakeCounter, name: '', credit: 3, oldGrade: '', newGrade: '', isCustomCredit: false });
+renderRetakes();
+}
 
-    function addCourse(){ courses.push({id: ++courseCounter, name:'', credit:3, grade:'', isCustomCredit: false}); renderCourses(); saveData(); }
-    function addRetake(){ retakes.push({id: ++retakeCounter, name:'', credit:3, oldGrade:'', newGrade:'', isCustomCredit: false}); renderRetakes(); saveData(); }
-    function removeCourse(id){ courses=courses.filter(c=>c.id!==id); renderCourses(); saveData(); }
-    function removeRetake(id){ retakes=retakes.filter(r=>r.id!==id); renderRetakes(); saveData(); }
+function removeCourse(id) {
+courses = courses.filter(c => c.id !== id);
+renderCourses();
+}
 
-    function toggleCreditMode(index, type) {
-        if(type === 'course') courses[index].isCustomCredit = !courses[index].isCustomCredit;
-        else retakes[index].isCustomCredit = !retakes[index].isCustomCredit;
-        type === 'course' ? renderCourses() : renderRetakes();
-        saveData();
-    }
+function removeRetake(id) {
+retakes = retakes.filter(r => r.id !== id);
+renderRetakes();
+}
 
-    function updateCreditValue(index, type, value) {
-        const intVal = parseInt(value) || 0;
-        if(type === 'course') courses[index].credit = intVal;
-        else retakes[index].credit = intVal;
-        saveData();
-    }
+function toggleCreditMode(index, type) {
+if (type === 'course') courses[index].isCustomCredit = !courses[index].isCustomCredit;
+else retakes[index].isCustomCredit = !retakes[index].isCustomCredit;
+type === 'course' ? renderCourses() : renderRetakes();
+}
 
-    function getCreditHtml(item, index, type) {
-        if (item.isCustomCredit) {
-            return `<div class="credit-wrapper"><input type="number" step="1" value="${item.credit}" oninput="updateCreditValue(${index}, '${type}', this.value)" placeholder="Cr" style="flex:1"><button class="btn-toggle-input" onclick="toggleCreditMode(${index}, '${type}')"><i class="fas fa-list"></i></button></div>`;
-        } else {
-            return `<div class="credit-wrapper"><select onchange="updateCreditValue(${index}, '${type}', this.value)" style="flex:1"><option value="3" ${item.credit === 3 ? 'selected' : ''}>3</option><option value="2" ${item.credit === 2 ? 'selected' : ''}>2</option><option value="1" ${item.credit === 1 ? 'selected' : ''}>1</option></select><button class="btn-toggle-input" onclick="toggleCreditMode(${index}, '${type}')"><i class="fas fa-keyboard"></i></button></div>`;
-        }
-    }
+function updateCreditValue(index, type, value) {
+const intVal = parseInt(value) || 0;
+if (type === 'course') courses[index].credit = intVal;
+else retakes[index].credit = intVal;
+type === 'course' ? renderCourses() : renderRetakes();
+}
 
-    function renderCourses(){
-        const container=document.getElementById('coursesContainer');
-        container.innerHTML='';
-        courses.forEach((course,index)=>{
-            const div=document.createElement('div');
-            div.className='course-row';
-            div.innerHTML=`<div class="row-num">${index+1}</div><input type="text" placeholder="Course Name" value="${course.name}" oninput="courses[${index}].name = this.value; saveData()">${getCreditHtml(course, index, 'course')}<select onchange="courses[${index}].grade = this.value; saveData()">${getGradeOptions(course.grade)}</select><button class="btn btn-delete" onclick="removeCourse(${course.id})"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(div);
-        });
-    }
+function getGradeOptions(selected, label = "Grade") {
+let options = `<option value="" ${!selected ? 'selected' : ''} disabled>${label}</option>`;
+for (let [grade, data] of Object.entries(gradeData)) {
+options += `<option value="${grade}" ${selected === grade ? 'selected' : ''}>${grade} (${data.range}) [${data.point.toFixed(2)}]</option>`;
+}
+return options;
+}
 
-    function renderRetakes(){
-        const container=document.getElementById('retakesContainer');
-        container.innerHTML='';
-        retakes.forEach((retake,index)=>{
-            const div=document.createElement('div');
-            div.className='course-row retake-row';
-            div.innerHTML=`<div class="row-num">R${index+1}</div><input type="text" placeholder="Retake Name" value="${retake.name}" oninput="retakes[${index}].name = this.value; saveData()">${getCreditHtml(retake, index, 'retake')}<select onchange="retakes[${index}].oldGrade = this.value; saveData()">${getGradeOptions(retake.oldGrade, "Old")}</select><div class="retake-arrow" style="text-align:center; color:var(--text-gray);"><i class="fas fa-arrow-right"></i></div><select onchange="retakes[${index}].newGrade = this.value; saveData()">${getGradeOptions(retake.newGrade, "New")}</select><button class="btn btn-delete" onclick="removeRetake(${retake.id})"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(div);
-        });
-    }
+function getCreditHtml(item, index, type) {
+if (item.isCustomCredit) {
+return `<div class="credit-wrapper"><input type="number" step="1" min="0" max="12" value="${item.credit}" oninput="updateCreditValue(${index}, '${type}', this.value)" placeholder="Cr" style="flex:1"><button class="btn-toggle-input" onclick="toggleCreditMode(${index}, '${type}')"><i class="fas fa-list"></i></button></div>`;
+} else {
+return `<div class="credit-wrapper"><select onchange="updateCreditValue(${index}, '${type}', this.value)" style="flex:1"><option value="3" ${item.credit === 3 ? 'selected' : ''}>3</option><option value="2" ${item.credit === 2 ? 'selected' : ''}>2</option><option value="1" ${item.credit === 1 ? 'selected' : ''}>1</option></select><button class="btn-toggle-input" onclick="toggleCreditMode(${index}, '${type}')"><i class="fas fa-keyboard"></i></button></div>`;
+}
+}
 
-    function calculateTarget() {
-        const target = parseFloat(document.getElementById('targetCGPA').value);
-        const currentCGPA = parseFloat(document.getElementById('currentCGPA').value) || 0;
-        const completedCredits = parseInt(document.getElementById('completedCredits').value) || 0;
-        const resultDiv = document.getElementById('targetResult');
+function renderCourses() {
+const container = document.getElementById('coursesContainer');
+if (!container) return;
+container.innerHTML = '';
+courses.forEach((course, index) => {
+const div = document.createElement('div');
+div.className = 'course-row';
+div.innerHTML = `<div class="row-num">${index + 1}</div><input type="text" placeholder="Course Name" value="${course.name || ''}" oninput="courses[${index}].name = this.value">${getCreditHtml(course, index, 'course')}<select onchange="courses[${index}].grade = this.value">${getGradeOptions(course.grade)}</select><button class="btn btn-delete" onclick="removeCourse(${course.id})"><i class="fas fa-trash"></i></button>`;
+container.appendChild(div);
+});
+}
 
-        if (!target) { resultDiv.innerHTML = "Enter a target to see required GPA."; return; }
+function renderRetakes() {
+const container = document.getElementById('retakesContainer');
+if (!container) return;
+container.innerHTML = '';
+retakes.forEach((retake, index) => {
+const div = document.createElement('div');
+div.className = 'course-row retake-row';
+div.innerHTML = `<div class="row-num">R${index + 1}</div><input type="text" placeholder="Retake Name" value="${retake.name || ''}" oninput="retakes[${index}].name = this.value">${getCreditHtml(retake, index, 'retake')}<select onchange="retakes[${index}].oldGrade = this.value">${getGradeOptions(retake.oldGrade, "Old")}</select><div class="retake-arrow" style="text-align:center; color:var(--text-gray);"><i class="fas fa-arrow-right"></i></div><select onchange="retakes[${index}].newGrade = this.value">${getGradeOptions(retake.newGrade, "New")}</select><button class="btn btn-delete" onclick="removeRetake(${retake.id})"><i class="fas fa-trash"></i></button>`;
+container.appendChild(div);
+});
+}
 
-        let newCredits = 0;
-        courses.forEach(c => newCredits += (parseInt(c.credit)||0));
-        retakes.forEach(r => newCredits += (parseInt(r.credit)||0));
+function populateGradingScale() {
+const grid = document.getElementById('scaleGrid');
+if (!grid) return;
+grid.innerHTML = '';
+for (let [grade, data] of Object.entries(gradeData)) {
+grid.innerHTML += `
+<div class="scale-item">
+<span class="scale-grade" style="font-weight:700; color:white;">${grade}</span>
+<span class="scale-point" style="color:var(--primary); font-size:1.1rem; font-weight:800;">${data.point.toFixed(2)}</span>
+<span class="scale-marks" style="color:var(--text-gray); font-size:0.75rem;">${data.range}</span>
+</div>
+`;
+}
+}
 
-        if (newCredits === 0) { resultDiv.innerHTML = "Add new courses/retakes to calculate requirements."; return; }
+function calculateTarget() {
+const target = parseFloat(document.getElementById('targetCGPA')?.value) || 0;
+const currentCGPA = parseFloat(document.getElementById('currentCGPA')?.value) || 0;
+const completedCredits = parseInt(document.getElementById('completedCredits')?.value) || 0;
+const resultDiv = document.getElementById('targetResult');
+if (!resultDiv) return;
 
-        const currentPoints = currentCGPA * completedCredits;
-        const requiredTotalPoints = target * (completedCredits + newCredits);
-        const requiredNewPoints = requiredTotalPoints - currentPoints;
-        const requiredGPA = requiredNewPoints / newCredits;
+if (!target) { resultDiv.innerHTML = "Enter a target to see required GPA."; return; }
 
-        if (requiredGPA > 4.0) resultDiv.innerHTML = `<span style="color:var(--danger)">Impossible!</span> You need <span class="target-val-display">${requiredGPA.toFixed(2)}</span> GPA.`;
-        else if (requiredGPA < 0) resultDiv.innerHTML = `You are already above target!`;
-        else resultDiv.innerHTML = `You need average <span class="target-val-display">${requiredGPA.toFixed(2)}</span> in new courses.`;
-    }
+let newCredits = 0;
+courses.forEach(c => newCredits += (parseInt(c.credit) || 0));
+retakes.forEach(r => newCredits += (parseInt(r.credit) || 0));
 
-    function calculate(){
-        const currentCGPA = parseFloat(document.getElementById('currentCGPA').value)||0;
-        const completedCredits = parseInt(document.getElementById('completedCredits').value)||0;
-        const totalRequiredCredits = parseInt(document.getElementById('totalRequiredCredits').value)||138;
-        
-        let totalQualityPoints = currentCGPA * completedCredits;
-        let totalCredits = completedCredits;
-        
-        let trimesterQualityPoints = 0;
-        let trimesterCredits = 0; // Includes Retakes for GPA Calculation
-        let newCourseCreditsOnly = 0; // Excludes Retakes for Chart
-        
-        // 1. Process New Courses
-        courses.forEach(c => {
-            const cr = parseInt(c.credit)||0;
-            const gp = gradeData[c.grade] ? gradeData[c.grade].point : 0;
-            if(c.grade && cr>0) {
-                totalQualityPoints += (cr * gp);
-                totalCredits += cr;
-                
-                trimesterQualityPoints += (cr * gp);
-                trimesterCredits += cr;
-                newCourseCreditsOnly += cr; // Add to chart data
-            }
-        });
+if (newCredits === 0) { resultDiv.innerHTML = "Add new courses/retakes to calculate requirements."; return; }
 
-        // 2. Process Retakes
-        retakes.forEach(r => {
-            const cr = parseInt(r.credit)||0;
-            const oldGp = gradeData[r.oldGrade] ? gradeData[r.oldGrade].point : 0;
-            const newGp = gradeData[r.newGrade] ? gradeData[r.newGrade].point : 0;
-            if(r.newGrade && cr>0) {
-                // Adjust points: Remove old points, add new points
-                totalQualityPoints = totalQualityPoints - (cr * oldGp) + (cr * newGp);
-                
-                // Add to Trimester totals for GPA calc
-                trimesterQualityPoints += (cr * newGp);
-                trimesterCredits += cr;
-                
-                // NOTE: We do NOT add to 'newCourseCreditsOnly' here
-            }
-        });
+const currentPoints = currentCGPA * completedCredits;
+const requiredTotalPoints = target * (completedCredits + newCredits);
+const requiredNewPoints = requiredTotalPoints - currentPoints;
+const requiredGPA = requiredNewPoints / newCredits;
 
-        // FIX 2: STRICT LOGIC (0.01 to 4.00)
-        let finalNewCGPA = totalCredits > 0 ? (totalQualityPoints / totalCredits) : 0.00;
-        finalNewCGPA = Math.min(Math.max(finalNewCGPA, 0.01), 4.00);
-        
-        let finalTriGPA = trimesterCredits > 0 ? (trimesterQualityPoints / trimesterCredits) : 0.00;
-        finalTriGPA = Math.min(Math.max(finalTriGPA, 0.01), 4.00);
+if (requiredGPA > 4.0) resultDiv.innerHTML = `<span style="color:var(--danger)">Impossible!</span> You need <span style="color:white; font-weight:bold;">${requiredGPA.toFixed(2)}</span> GPA.`;
+else if (requiredGPA < 0) resultDiv.innerHTML = `You are already above target!`;
+else resultDiv.innerHTML = `You need average <span style="color:white; font-weight:bold;">${requiredGPA.toFixed(2)}</span> in new courses.`;
+}
 
-        const left = Math.max(0, totalRequiredCredits - totalCredits);
+function syncTuitionFromCalc() {
+let total = 0;
+courses.forEach(c => total += (parseInt(c.credit) || 0));
+retakes.forEach(r => total += (parseInt(r.credit) || 0));
+document.getElementById('tuitionCredits').value = total;
+calculateTuition();
+}
 
-        document.getElementById('newCGPA').textContent = finalNewCGPA.toFixed(2);
-        document.getElementById('currentTrimesterGPA').textContent = finalTriGPA.toFixed(2);
-        document.getElementById('totalCredits').textContent = totalCredits;
-        document.getElementById('remainingCredits').textContent = left;
-        document.getElementById('trimesterCreditsDisplay').textContent = trimesterCredits;
+function calculateTuition() {
+const credits = parseFloat(document.getElementById('tuitionCredits')?.value) || 0;
+const rate = parseFloat(document.getElementById('ratePerCredit')?.value) || 0;
+const fixed = parseFloat(document.getElementById('fixedFee')?.value) || 0;
+const waiver = parseFloat(document.getElementById('waiverPercent')?.value) || 0;
 
-        const feedback = document.getElementById('feedbackMessage');
-        feedback.className = 'feedback-card'; 
-        feedback.style.display = 'block';
+const baseTuition = credits * rate;
+const discount = baseTuition * waiver;
+const total = (baseTuition - discount) + fixed;
 
-        if (finalNewCGPA > 3.5) {
-            feedback.innerHTML = `<h3> Excellent work! </h3><p> You are doing great!</p>`;
-            feedback.classList.add('success');
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        } else if (finalNewCGPA >= 2.8) {
-            feedback.innerHTML = `<h3> Well Done!</h3><p>Keep it up! You can do better.</p>`;
-            feedback.classList.add('warning');
-        } else {
-            feedback.innerHTML = `<h3> Warning!!! </h3><p>Be very careful with your study next time.</p>`;
-            feedback.classList.add('danger');
-        }
+const baseEl = document.getElementById('baseTuitionDisplay');
+const waiverEl = document.getElementById('waiverAmountDisplay');
+const fixedEl = document.getElementById('fixedFeeDisplay');
+const totalEl = document.getElementById('totalPayableDisplay');
 
-        const ctx = document.getElementById('creditChart').getContext('2d');
-        if (myChart) myChart.destroy();
-        
-        myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Completed', 'New Courses', 'Remaining'],
-                datasets: [{
-                    // Fix: Using newCourseCreditsOnly instead of trimesterCredits
-                    data: [completedCredits, newCourseCreditsOnly, left],
-                    backgroundColor: ['#10B981', '#3B82F6', '#1E293B'],
-                    borderColor: '#0F172A',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                layout: { padding: 20 },
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#94A3B8', padding: 20 } },
-                    title: { display: true, text: 'Credit Distribution', color: '#fff', font: { size: 16 } },
-                    datalabels: {
-                        color: '#fff', font: { weight: 'bold', size: 12 },
-                        formatter: (value, ctx) => {
-                            if(value === 0) return '';
-                            let sum = 0;
-                            let dataArr = ctx.chart.data.datasets[0].data;
-                            dataArr.map(data => { sum += data; });
-                            if(sum === 0) return '0%';
-                            return (value*100 / sum).toFixed(1)+"%";
-                        },
-                        anchor: 'center', align: 'center'
-                    }
-                }
-            }
-        });
+if (baseEl) baseEl.textContent = baseTuition.toLocaleString() + " Tk";
+if (waiverEl) waiverEl.textContent = "-" + discount.toLocaleString() + " Tk" + (waiver > 0 ? ` (${Math.round(waiver * 100)}%)` : "");
+if (fixedEl) fixedEl.textContent = fixed.toLocaleString() + " Tk";
+if (totalEl) totalEl.textContent = total.toLocaleString() + " Tk";
+}
 
-        document.getElementById('result').classList.add('active');
-        document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-        saveData();
-    }
+// Main calculation function
+function calculate() {
+// Safely get values with fallbacks
+const currentCGPA = parseFloat(document.getElementById('currentCGPA')?.value) || 0;
+const completedCredits = parseInt(document.getElementById('completedCredits')?.value) || 0;
+const totalRequiredCredits = parseInt(document.getElementById('totalRequiredCredits')?.value) || 138;
 
-    function resetAll(){
-        if(confirm("Clear all data and start over?")){
-            localStorage.removeItem('uiuCalcData'); 
-            location.reload(); 
-        }
-    }
+let totalQualityPoints = currentCGPA * completedCredits;
+let totalCredits = completedCredits;
 
-    function downloadPDF(){
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFillColor(255, 138, 0); doc.rect(0, 0, 210, 30, 'F');
-        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.setFont("helvetica", "bold");
-        doc.text("UIU CGPA Calculator", 14, 20);
-        
-        const currentCGPA = document.getElementById('currentCGPA').value || "0.00";
-        const completedCredits = document.getElementById('completedCredits').value || "0";
-        
-        doc.autoTable({
-            startY: 40,
-            head: [['Parameter', 'Value']],
-            body: [['Current CGPA', currentCGPA], ['Completed Credits', completedCredits], ['Date', new Date().toLocaleDateString()]],
-            theme: 'striped', headStyles: { fillColor: [30, 41, 59] }
-        });
+let trimesterQualityPoints = 0;
+let trimesterCredits = 0;
+let newCourseCreditsOnly = 0;
 
-        let finalY = doc.lastAutoTable.finalY + 10;
-        if(courses.length > 0 && courses[0].grade){
-            const courseData = courses.filter(c => c.grade).map((c, i) => [i+1, c.name || "Untitled", c.credit, c.grade]);
-            if(courseData.length>0){
-                doc.text("New Courses", 14, finalY);
-                doc.autoTable({ startY: finalY + 2, head: [['#', 'Name', 'Credit', 'Grade']], body: courseData, theme: 'striped', headStyles: { fillColor: [59, 130, 246] } });
-                finalY = doc.lastAutoTable.finalY + 10;
-            }
-        }
-        
-        if(retakes.length > 0 && retakes[0].newGrade){
-            const retakeData = retakes.filter(r => r.newGrade).map((r, i) => [i+1, r.name || "Untitled", r.credit, r.oldGrade, r.newGrade]);
-            if(retakeData.length>0){
-                doc.text("Retakes", 14, finalY);
-                doc.autoTable({ startY: finalY + 2, head: [['#', 'Name', 'Cr', 'Old', 'New']], body: retakeData, theme: 'striped', headStyles: { fillColor: [249, 115, 22] } });
-                finalY = doc.lastAutoTable.finalY + 15;
-            }
-        }
+// Process New Courses
+courses.forEach(c => {
+const cr = parseInt(c.credit) || 0;
+const gp = (c.grade && gradeData[c.grade]) ? gradeData[c.grade].point : 0;
 
-        const newCGPA = document.getElementById('newCGPA').textContent;
-        const triGPA = document.getElementById('currentTrimesterGPA').textContent;
-        const totalCred = document.getElementById('totalCredits').textContent;
-        
-        doc.setDrawColor(16, 185, 129); doc.setLineWidth(1); doc.rect(14, finalY, 182, 30);
-        doc.setTextColor(0,0,0); doc.setFontSize(14);
-        doc.text(`New Cumulative CGPA:  ${newCGPA}`, 20, finalY + 12);
-        doc.setFontSize(11);
-        doc.text(`Trimester GPA: ${triGPA}  |  Total Credits: ${totalCred}`, 20, finalY + 22);
-        doc.setFontSize(9); doc.text("©️Designed by Asif Rahman", 105, 290, { align: "center" });
-        doc.save("UIU_CGPA_Report.pdf");
-    }
+if (c.grade && gradeData[c.grade] && cr > 0) {
+totalQualityPoints += (cr * gp);
+totalCredits += cr;
+trimesterQualityPoints += (cr * gp);
+trimesterCredits += cr;
+newCourseCreditsOnly += cr;
+}
+});
 
-    function downloadImage() {
-        const resultCard = document.getElementById('resultCard');
-        html2canvas(resultCard, { scale: 2, backgroundColor: '#1E293B', useCORS: true }).then(canvas => {
-            const link = document.createElement('a'); link.download = 'UIU_CGPA_Result.png'; link.href = canvas.toDataURL("image/png"); link.click();
-        });
-    }
+// Process Retakes
+retakes.forEach(r => {
+const cr = parseInt(r.credit) || 0;
+const oldGp = (r.oldGrade && gradeData[r.oldGrade]) ? gradeData[r.oldGrade].point : 0;
+const newGp = (r.newGrade && gradeData[r.newGrade]) ? gradeData[r.newGrade].point : 0;
+
+if (r.newGrade && gradeData[r.newGrade] && cr > 0) {
+// Remove old grade points if old grade exists
+if (r.oldGrade && gradeData[r.oldGrade]) {
+totalQualityPoints -= (cr * oldGp);
+}
+// Add new grade points
+totalQualityPoints += (cr * newGp);
+// Add to trimester
+trimesterQualityPoints += (cr * newGp);
+trimesterCredits += cr;
+// Note: totalCredits doesn't change for retakes
+}
+});
+
+// Ensure CGPA is between 0.00 and 4.00
+let finalNewCGPA = totalCredits > 0 ? (totalQualityPoints / totalCredits) : 0;
+finalNewCGPA = Math.min(Math.max(finalNewCGPA, 0), 4.00);
+
+let finalTriGPA = trimesterCredits > 0 ? (trimesterQualityPoints / trimesterCredits) : 0;
+finalTriGPA = Math.min(Math.max(finalTriGPA, 0), 4.00);
+
+const left = Math.max(0, totalRequiredCredits - totalCredits);
+
+// Safely update UI
+const newCGPAEl = document.getElementById('newCGPA');
+const triGPAEl = document.getElementById('currentTrimesterGPA');
+const totalCreditsEl = document.getElementById('totalCredits');
+const remainingEl = document.getElementById('remainingCredits');
+const trimesterCreditsEl = document.getElementById('trimesterCreditsDisplay');
+
+if (newCGPAEl) newCGPAEl.textContent = finalNewCGPA.toFixed(2);
+if (triGPAEl) triGPAEl.textContent = finalTriGPA.toFixed(2);
+if (totalCreditsEl) totalCreditsEl.textContent = totalCredits;
+if (remainingEl) remainingEl.textContent = left;
+if (trimesterCreditsEl) trimesterCreditsEl.textContent = trimesterCredits;
+
+// Feedback card removed – no display
+
+// Enhanced Chart with circle legend markers
+const ctx = document.getElementById('creditChart')?.getContext('2d');
+if (ctx) {
+if (myChart) myChart.destroy();
+
+try {
+myChart = new Chart(ctx, {
+type: 'doughnut',
+data: {
+labels: ['Completed', 'New Courses', 'Remaining'],
+datasets: [{
+data: [completedCredits, newCourseCreditsOnly, left],
+backgroundColor: ['#10B981', '#3B82F6', '#FF8A00'],
+borderColor: '#0F172A',
+borderWidth: 3,
+hoverOffset: 10
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+cutout: '65%',
+plugins: {
+legend: {
+position: 'bottom',
+labels: {
+color: '#94A3B8',
+font: { size: 12, weight: '500' },
+usePointStyle: true,      // use circles instead of boxes
+pointStyle: 'circle'       // explicitly set circle
+}
+},
+datalabels: {
+color: '#fff',
+backgroundColor: 'rgba(0,0,0,0.5)',
+borderRadius: 12,
+padding: { top: 4, bottom: 4, left: 8, right: 8 },
+font: { weight: 'bold', size: 12 },
+formatter: (value, ctx) => {
+if (value === 0) return '';
+const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+const percentage = ((value / sum) * 100).toFixed(1);
+return percentage + '%';
+}
+},
+tooltip: {
+callbacks: {
+label: (context) => {
+const label = context.label || '';
+const value = context.raw || 0;
+const total = context.dataset.data.reduce((a, b) => a + b, 0);
+const percentage = ((value / total) * 100).toFixed(1);
+return `${label}: ${value} credits (${percentage}%)`;
+}
+}
+}
+}
+}
+});
+} catch (e) {
+console.warn('Chart creation failed:', e);
+}
+}
+
+const resultDiv = document.getElementById('result');
+if (resultDiv) {
+resultDiv.classList.add('active');
+resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+}
+
+function resetAll() {
+if (confirm("Clear all data and start over?")) {
+resetToDefault();
+}
+}
+
+// Enhanced PDF download with actual content
+function downloadPDF() {
+const { jsPDF } = window.jspdf;
+if (!jsPDF) {
+alert('PDF library not loaded. Please try again.');
+return;
+}
+
+const doc = new jsPDF();
+const newCGPA = document.getElementById('newCGPA').textContent;
+const trimesterGPA = document.getElementById('currentTrimesterGPA').textContent;
+const totalCredits = document.getElementById('totalCredits').textContent;
+const remaining = document.getElementById('remainingCredits').textContent;
+const trimesterCredits = document.getElementById('trimesterCreditsDisplay').textContent;
+
+// Add header with gradient-like effect
+doc.setFillColor(255, 138, 0);
+doc.rect(0, 0, 210, 40, 'F');
+doc.setTextColor(255, 255, 255);
+doc.setFontSize(24);
+doc.setFont('helvetica', 'bold');
+doc.text('UIU Calc Report', 105, 25, { align: 'center' });
+
+// Summary Section
+doc.setTextColor(0, 0, 0);
+doc.setFontSize(16);
+doc.text('CGPA Summary', 20, 60);
+doc.setFontSize(12);
+doc.text(`New CGPA: ${newCGPA}`, 20, 75);
+doc.text(`Trimester GPA: ${trimesterGPA}`, 20, 85);
+doc.text(`Total Credits: ${totalCredits}`, 20, 95);
+doc.text(`Remaining Credits: ${remaining}`, 20, 105);
+doc.text(`Trimester Credits: ${trimesterCredits}`, 20, 115);
+
+// New Courses Table
+let yPos = 130;
+if (courses.length > 0) {
+doc.setFontSize(14);
+doc.text('New Courses', 20, yPos);
+yPos += 10;
+doc.autoTable({
+startY: yPos,
+head: [['#', 'Course', 'Credits', 'Grade']],
+body: courses.map((c, i) => [i+1, c.name || 'Unnamed', c.credit || 0, c.grade || '—']),
+theme: 'grid',
+headStyles: { fillColor: [59, 130, 246] },
+styles: { fontSize: 10 }
+});
+yPos = doc.lastAutoTable.finalY + 10;
+} else {
+doc.text('No new courses added.', 20, yPos);
+yPos += 15;
+}
+
+// Retakes Table
+if (retakes.length > 0) {
+doc.setFontSize(14);
+doc.text('Retake Courses', 20, yPos);
+yPos += 10;
+doc.autoTable({
+startY: yPos,
+head: [['#', 'Course', 'Credits', 'Old Grade', 'New Grade']],
+body: retakes.map((r, i) => [i+1, r.name || 'Unnamed', r.credit || 0, r.oldGrade || '—', r.newGrade || '—']),
+theme: 'grid',
+headStyles: { fillColor: [255, 138, 0] },
+styles: { fontSize: 10 }
+});
+yPos = doc.lastAutoTable.finalY + 10;
+} else {
+doc.text('No retake courses added.', 20, yPos);
+yPos += 15;
+}
+
+// Footer
+doc.setFontSize(8);
+doc.setTextColor(128, 128, 128);
+doc.text('Generated by UIU Calc • ' + new Date().toLocaleString(), 105, 280, { align: 'center' });
+
+doc.save('uiu-calc-report.pdf');
+}
+
+// Enhanced Image download (captures entire result section)
+function downloadImage() {
+const element = document.getElementById('result');
+if (!element) return;
+
+html2canvas(element, {
+backgroundColor: '#0F172A',
+scale: 2,
+logging: false,
+allowTaint: false,
+useCORS: true
+}).then(canvas => {
+const link = document.createElement('a');
+link.download = 'uiu-calc-result.png';
+link.href = canvas.toDataURL('image/png');
+link.click();
+}).catch(err => {
+console.error('Image capture failed:', err);
+alert('Failed to capture image. Please try again.');
+});
+}
+
+// Call populateGradingScale on load
+populateGradingScale();
 </script>
 
 </body>
