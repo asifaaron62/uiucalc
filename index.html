@@ -15,7 +15,7 @@
 
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
 
-<title>UIU CGPA & Tuition Calc</title>
+<title>UIU Calc</title>
 
 <!-- Load Font Awesome normally for instant icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -141,13 +141,13 @@ cursor: pointer; display: flex; align-items: center; justify-content: center;
 .row-num { font-weight: 700; color: var(--text-gray); text-align: center; }
 .btn { border: none; padding: 10px 16px; border-radius: 18px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; }
 
-/* Refined Add Course / Retake buttons – now match the Calculate button size */
+/* Refined Add Course / Retake buttons – now match the Calculate button size on desktop */
 .btn-add, .btn-add-retake {
 padding: 14px 40px;                /* equal to Calculate button */
 font-size: 1rem;              /* same as Calculate */
 border-radius: 24px;          /* same as Calculate */
-width: 70%;                  /* remove full width */
-max-width: 1200px;             /* same max-width as Calculate */
+width: 70%;                  /* fallback for older browsers */
+max-width: 1200px;             /* fallback */
 margin-left: auto;
 margin-right: auto;
 justify-content: center;
@@ -333,11 +333,13 @@ margin-left: auto;
 margin-right: auto;
 }
 
-@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Desktop & Tablet (screens wider than 400px) hide floating button, show desktop calculate button */
+/* Desktop & Tablet (screens wider than 400px) – set Add buttons to match Calculate */
 @media (min-width: 401px) {
+.btn-add,
+.btn-add-retake {
+width: 65%;
+max-width: 800px;
+}
 .mobile-fab-container {
 display: none !important;
 }
@@ -346,7 +348,7 @@ display: block !important;
 }
 }
 
-/* Small phones (≤400px) show floating button, hide desktop calculate button */
+/* Small phones (≤400px) – stacked course rows, keep floating button */
 @media (max-width: 400px) {
 .mobile-fab-container {
 display: block !important;
@@ -357,23 +359,47 @@ display: none !important;
 body {
 padding-bottom: 100px;
 }
-.course-row {
-grid-template-columns: 1fr 1fr;
+/* Course rows – stacked flex layout */
+.course-row,
+.retake-row {
+display: flex;
+flex-direction: column;
 gap: 10px;
+padding: 16px;
+padding-bottom: 50px;
 position: relative;
-padding-bottom: 45px;
+background: rgba(255,255,255,0.03);
+border-radius: 18px;
+margin-bottom: 12px;
+border: 1px solid rgba(255,255,255,0.1);
 }
-.course-row input:first-of-type {
-grid-column: span 2;
+.course-row input,
+.course-row select,
+.course-row .credit-wrapper,
+.retake-row input,
+.retake-row select,
+.retake-row .credit-wrapper {
+width: 100%;
 }
 .row-num {
 display: none;
+}
+.retake-row .retake-arrow {
+display: none;   /* hide arrow on small screens */
 }
 .btn-delete {
 position: absolute;
 bottom: 8px;
 right: 8px;
 width: auto;
+}
+.credit-wrapper {
+display: flex;
+gap: 8px;
+}
+.credit-wrapper input,
+.credit-wrapper select {
+flex: 1;
 }
 .stats-grid {
 grid-template-columns: 1fr;
@@ -382,9 +408,6 @@ grid-template-columns: 1fr;
 .stat-card.secondary,
 .stat-card.tertiary {
 grid-column: span 1;
-}
-.credit-wrapper {
-grid-column: span 2;
 }
 .header {
 margin-bottom: 30px;
@@ -437,7 +460,7 @@ height: 320px;
 <div class="container">
 <div class="header">
 <div class="left-menu-container">
-<button class="menu-btn" onclick="toggleLeftMenu()">
+<button class="menu-btn" onclick="toggleLeftMenu()" aria-label="Home menu">
 <i class="fas fa-home"></i>
 </button>
 <div class="dropdown-menu left-side" id="leftDropdownMenu">
@@ -461,7 +484,7 @@ height: 320px;
 </div>
 
 <div class="top-menu-container">
-<button class="menu-btn" onclick="toggleMenu()">
+<button class="menu-btn" onclick="toggleMenu()" aria-label="Options menu">
 <i class="fas fa-ellipsis-v"></i>
 </button>
 <div class="dropdown-menu" id="dropdownMenu">
@@ -482,7 +505,7 @@ height: 320px;
 
 <i class="fas fa-graduation-cap logo-icon"></i>
 <h1>UIU Calc</h1>
-<p class="subtitle">Calculte your CGPA with precision</p>
+<p class="subtitle">Calculate your CGPA with precision</p>  <!-- typo fixed -->
 </div>
 
 <div class="glass-card">
@@ -576,8 +599,8 @@ height: 320px;
 
 <footer class="footer">
 <div class="social-links">
-<a href="https://facebook.com/asifaaron062" target="_blank" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
-<a href="https://instagram.com/asifaaron62" target="_blank" class="social-btn in"><i class="fab fa-instagram"></i></a>
+<a href="https://facebook.com/asifaaron062" target="_blank" rel="noopener noreferrer" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>  <!-- rel added -->
+<a href="https://instagram.com/asifaaron62" target="_blank" rel="noopener noreferrer" class="social-btn in"><i class="fab fa-instagram"></i></a>  <!-- rel added -->
 </div>
 <p class="copyright">Designed by <strong>Asif Rahman</strong> </p>
 </footer>
@@ -945,11 +968,15 @@ else retakes[index].isCustomCredit = !retakes[index].isCustomCredit;
 type === 'course' ? renderCourses() : renderRetakes();
 }
 
+// Fixed: update credit value without re-rendering (prevents input focus loss)
 function updateCreditValue(index, type, value) {
 const intVal = parseInt(value) || 0;
-if (type === 'course') courses[index].credit = intVal;
-else retakes[index].credit = intVal;
-type === 'course' ? renderCourses() : renderRetakes();
+if (type === 'course') {
+courses[index].credit = intVal;
+} else {
+retakes[index].credit = intVal;
+}
+// No render call – just update the array. The input value stays in sync via DOM.
 }
 
 function getGradeOptions(selected, label = "Grade") {
@@ -1007,6 +1034,7 @@ grid.innerHTML += `
 }
 }
 
+// Fixed: target planner excludes retake credits
 function calculateTarget() {
 const target = parseFloat(document.getElementById('targetCGPA')?.value) || 0;
 const currentCGPA = parseFloat(document.getElementById('currentCGPA')?.value) || 0;
@@ -1018,9 +1046,9 @@ if (!target) { resultDiv.innerHTML = "Enter a target to see required GPA."; retu
 
 let newCredits = 0;
 courses.forEach(c => newCredits += (parseInt(c.credit) || 0));
-retakes.forEach(r => newCredits += (parseInt(r.credit) || 0));
+// Retakes do NOT count toward total credits, so they are excluded
 
-if (newCredits === 0) { resultDiv.innerHTML = "Add new courses/retakes to calculate requirements."; return; }
+if (newCredits === 0) { resultDiv.innerHTML = "Add new courses to calculate requirements."; return; }
 
 const currentPoints = currentCGPA * completedCredits;
 const requiredTotalPoints = target * (completedCredits + newCredits);
@@ -1352,4 +1380,4 @@ populateGradingScale();
 </script>
 
 </body>
-  </html>
+</html>
